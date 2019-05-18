@@ -1,0 +1,9 @@
+wilderness:
+  type: "NORMAL"
+  environment: "NORMAL"
+  seed: []
+  generate-structures: true
+  pvp: true
+  difficulty: "HARD"
+  spawn-monsters: true
+  spawn-animals: true

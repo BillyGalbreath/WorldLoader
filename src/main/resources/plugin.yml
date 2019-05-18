@@ -1,0 +1,19 @@
+name: "${project.artifactId}"
+main: "${project.groupId}.${project.artifactId}"
+version: "${project.version}"
+description: "${project.artifactId} Plugin"
+author: "BillyGalbreath"
+api-version: "1.13"
+
+commands:
+  worldloader:
+    description: WorldLoader main command
+    usage: /<command> (list | tp)
+
+permissions:
+  worldloader.command.list:
+    description: List all loaded worlds
+    default: op
+  worldloader.command.tp:
+    description: Teleport between worlds
+    default: op
