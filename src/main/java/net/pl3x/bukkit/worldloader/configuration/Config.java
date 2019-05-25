@@ -13,8 +13,12 @@ import java.util.logging.Level;
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
 
+    public static boolean SPAWN_USES_CURRENT_WORLD = false;
+
     private static void init() {
         LANGUAGE_FILE = getString("language-file", LANGUAGE_FILE);
+
+        SPAWN_USES_CURRENT_WORLD = getBoolean("spawn-uses-current-world", SPAWN_USES_CURRENT_WORLD);
     }
 
     // ############################  DO NOT EDIT BELOW THIS LINE  ############################
@@ -51,5 +55,10 @@ public class Config {
     private static String getString(String path, String def) {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
+    }
+
+    private static boolean getBoolean(String path, boolean def) {
+        config.addDefault(path, def);
+        return config.getBoolean(path, config.getBoolean(path));
     }
 }
