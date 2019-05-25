@@ -6,14 +6,29 @@ author: "BillyGalbreath"
 api-version: "1.13"
 
 commands:
+  setspawn:
+    description: Set the servers main spawn
+    usage: /<command>
+  spawn:
+    description: Teleport to the servers main spawn
+    usage: /<command>
+  world:
+    description: Teleport between worlds
+    usage: /<command> [world]
   worldloader:
-    description: WorldLoader main command
-    usage: /<command> (list | tp)
+    description: Reload configs
+    usage: /<command> (reload)
 
 permissions:
-  worldloader.command.list:
-    description: List all loaded worlds
+  command.setspawn:
+    description: Set the servers main spawn
     default: op
-  worldloader.command.tp:
+  command.spawn:
+    description: Teleport to the servers main spawn
+    default: true
+  command.world:
     description: Teleport between worlds
+    default: op
+  command.worldloader:
+    description: Allows to reload configs
     default: op

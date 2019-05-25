@@ -1,9 +1,12 @@
-wilderness:
-  type: "NORMAL"
-  environment: "NORMAL"
-  seed: []
-  generate-structures: true
-  pvp: true
-  difficulty: "HARD"
-  spawn-monsters: true
-  spawn-animals: true
+language-file: "lang-en.yml"
+
+worlds:
+  wilderness:
+    type: "NORMAL"
+    environment: "NORMAL"
+    seed: []
+    generate-structures: true
+    pvp: true
+    difficulty: "HARD"
+    spawn-monsters: true
+    spawn-animals: true

@@ -9,16 +9,16 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
+            <groupId>net.pl3x.purpur</groupId>
+            <artifactId>purpur-api</artifactId>
             <version>1.14.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
     <repositories>
         <repository>
-            <id>paper</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <id>purpur-repo</id>
+            <url>https://repo.pl3x.net/</url>
         </repository>
     </repositories>
     <build>
