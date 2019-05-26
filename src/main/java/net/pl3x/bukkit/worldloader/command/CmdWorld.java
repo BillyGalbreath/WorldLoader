@@ -21,6 +21,7 @@ public class CmdWorld implements TabExecutor {
             return Bukkit.getWorlds().stream()
                     .filter(world -> world.getName().toLowerCase().startsWith(arg))
                     .map(World::getName)
+                    .filter(name -> sender.hasPermission("command.world." + name))
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
