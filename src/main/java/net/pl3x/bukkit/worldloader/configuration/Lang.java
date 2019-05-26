@@ -16,6 +16,8 @@ public class Lang {
     public static String COMMAND_NO_PERMISSION = "&4You do not have permission for that command!";
     public static String PLAYER_COMMAND = "&4This command is only available to players!";
 
+    public static String WORLD_NO_PERMISSION = "&4You do not have permission to warp to {world}!";
+
     public static String TELEPORTING = "&dTeleporting...";
 
     public static String SET_SPAWN_SUCCESS = "&dSpawn has been set for &7{world}";
@@ -31,6 +33,8 @@ public class Lang {
     private static void init() {
         COMMAND_NO_PERMISSION = getString("command-no-permission", COMMAND_NO_PERMISSION);
         PLAYER_COMMAND = getString("player-command", PLAYER_COMMAND);
+
+        WORLD_NO_PERMISSION = getString("world-no-permission", WORLD_NO_PERMISSION);
 
         TELEPORTING = getString("teleporting", TELEPORTING);
 

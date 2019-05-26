@@ -15,10 +15,14 @@ public class Config {
 
     public static boolean SPAWN_USES_CURRENT_WORLD = false;
 
+    public static boolean PER_WORLD_PERMISSIONS = false;
+
     private static void init() {
         LANGUAGE_FILE = getString("language-file", LANGUAGE_FILE);
 
         SPAWN_USES_CURRENT_WORLD = getBoolean("spawn-uses-current-world", SPAWN_USES_CURRENT_WORLD);
+
+        PER_WORLD_PERMISSIONS = getBoolean("per-world-permissions", PER_WORLD_PERMISSIONS);
     }
 
     // ############################  DO NOT EDIT BELOW THIS LINE  ############################

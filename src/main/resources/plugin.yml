@@ -29,6 +29,9 @@ permissions:
   command.world:
     description: Teleport between worlds
     default: op
+  command.world.*:
+    description: Allows teleporting to all worlds
+    default: op
   command.worldloader:
     description: Allows to reload configs
     default: op

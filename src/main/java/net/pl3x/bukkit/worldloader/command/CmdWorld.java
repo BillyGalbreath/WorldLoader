@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.worldloader.command;
 
+import net.pl3x.bukkit.worldloader.configuration.Config;
 import net.pl3x.bukkit.worldloader.configuration.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -45,6 +46,12 @@ public class CmdWorld implements TabExecutor {
         World world = Bukkit.getWorld(args[0]);
         if (world == null) {
             Lang.send(sender, Lang.WORLD_NOT_FOUND);
+            return true;
+        }
+
+        if (Config.PER_WORLD_PERMISSIONS && !player.hasPermission("command.world." + world.getName().toLowerCase())) {
+            Lang.send(sender, Lang.WORLD_NO_PERMISSION
+                    .replace("{world}", world.getName()));
             return true;
         }
 
