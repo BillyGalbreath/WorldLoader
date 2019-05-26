@@ -38,7 +38,7 @@ public class Config {
             Bukkit.getLogger().log(Level.SEVERE, "Could not load config.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
-        config.options().header("This is the configuration file for Chatter.");
+        config.options().header("This is the configuration file for WorldLoader.");
         config.options().copyDefaults(true);
 
         Config.init();

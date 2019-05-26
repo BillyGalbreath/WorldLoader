@@ -61,7 +61,7 @@ public class Lang {
             Bukkit.getLogger().log(Level.SEVERE, "Could not load " + Config.LANGUAGE_FILE + ", please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
-        config.options().header("This is the main language file for Chatter.");
+        config.options().header("This is the main language file for WorldLoader.");
         config.options().copyDefaults(true);
 
         Lang.init();

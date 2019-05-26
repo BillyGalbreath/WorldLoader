@@ -30,7 +30,8 @@ public class CmdSetSpawn implements TabExecutor {
 
         boolean success = player.getWorld().setSpawnLocation(player.getLocation());
 
-        Lang.send(sender, success ? Lang.SET_SPAWN_SUCCESS : Lang.SET_SPAWN_ERROR);
+        Lang.send(sender, (success ? Lang.SET_SPAWN_SUCCESS : Lang.SET_SPAWN_ERROR)
+                .replace("{world}", player.getWorld().getName()));
         return true;
     }
 }
