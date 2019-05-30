@@ -10,3 +10,6 @@ worlds:
     difficulty: "HARD"
     spawn-monsters: true
     spawn-animals: true
+    on-join:
+      title: ""
+      subtitle: ""

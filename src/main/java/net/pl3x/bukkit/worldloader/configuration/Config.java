@@ -2,12 +2,16 @@ package net.pl3x.bukkit.worldloader.configuration;
 
 import com.google.common.base.Throwables;
 import net.pl3x.bukkit.worldloader.WorldLoader;
-import org.bukkit.Bukkit;
+import net.pl3x.bukkit.worldloader.WorldSettings;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class Config {
@@ -16,6 +20,8 @@ public class Config {
     public static boolean SPAWN_USES_CURRENT_WORLD = false;
 
     public static boolean PER_WORLD_PERMISSIONS = false;
+
+    public static final Map<String, WorldSettings> WORLD_SETTINGS = new HashMap<>();
 
     private static void init() {
         LANGUAGE_FILE = getString("language-file", LANGUAGE_FILE);
@@ -39,7 +45,7 @@ public class Config {
             config.load(configFile);
         } catch (IOException ignore) {
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load config.yml, please correct your syntax errors", ex);
+            plugin.getLogger().log(Level.SEVERE, "Could not load config.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
         config.options().header("This is the configuration file for WorldLoader.");
@@ -50,7 +56,24 @@ public class Config {
         try {
             config.save(configFile);
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
+            plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
+        }
+
+        WORLD_SETTINGS.clear();
+        ConfigurationSection worlds = plugin.getConfig().getConfigurationSection("worlds");
+        if (worlds != null) {
+            for (String name : worlds.getKeys(false)) {
+                ConfigurationSection section = worlds.getConfigurationSection(name);
+                if (section != null) {
+
+
+                    try {
+                        WORLD_SETTINGS.put(name, new WorldSettings(name, section));
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Could not load level \"" + name + "\"");
+                    }
+                }
+            }
         }
     }
 
@@ -64,5 +87,13 @@ public class Config {
     private static boolean getBoolean(String path, boolean def) {
         config.addDefault(path, def);
         return config.getBoolean(path, config.getBoolean(path));
+    }
+
+    public static WorldSettings getSettings(World world) {
+        return getSettings(world.getName());
+    }
+
+    public static WorldSettings getSettings(String worldName) {
+        return WORLD_SETTINGS.get(worldName);
     }
 }
