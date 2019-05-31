@@ -1,12 +1,12 @@
 package net.pl3x.bukkit.worldloader.configuration;
 
 import com.google.common.base.Throwables;
-import net.pl3x.bukkit.worldloader.WorldLoader;
 import net.pl3x.bukkit.worldloader.WorldSettings;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,8 @@ public class Config {
 
     public static boolean PER_WORLD_PERMISSIONS = false;
 
+    public static int RTP_COOLDOWN = 300; // 5 minutes
+
     public static final Map<String, WorldSettings> WORLD_SETTINGS = new HashMap<>();
 
     private static void init() {
@@ -29,6 +31,8 @@ public class Config {
         SPAWN_USES_CURRENT_WORLD = getBoolean("spawn-uses-current-world", SPAWN_USES_CURRENT_WORLD);
 
         PER_WORLD_PERMISSIONS = getBoolean("per-world-permissions", PER_WORLD_PERMISSIONS);
+
+        RTP_COOLDOWN = getInt("rtp-cooldown", RTP_COOLDOWN);
     }
 
     // ############################  DO NOT EDIT BELOW THIS LINE  ############################
@@ -36,8 +40,7 @@ public class Config {
     /**
      * Reload the configuration file
      */
-    public static void reload() {
-        WorldLoader plugin = WorldLoader.getInstance();
+    public static void reload(Plugin plugin) {
         plugin.saveDefaultConfig();
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         config = new YamlConfiguration();
@@ -48,7 +51,7 @@ public class Config {
             plugin.getLogger().log(Level.SEVERE, "Could not load config.yml, please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
-        config.options().header("This is the configuration file for WorldLoader.");
+        config.options().header("This is the configuration file for " + plugin.getName());
         config.options().copyDefaults(true);
 
         Config.init();
@@ -87,6 +90,11 @@ public class Config {
     private static boolean getBoolean(String path, boolean def) {
         config.addDefault(path, def);
         return config.getBoolean(path, config.getBoolean(path));
+    }
+
+    private static int getInt(String path, int def) {
+        config.addDefault(path, def);
+        return config.getInt(path, config.getInt(path));
     }
 
     public static WorldSettings getSettings(World world) {

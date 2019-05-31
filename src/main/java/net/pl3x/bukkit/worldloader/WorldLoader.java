@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.worldloader;
 
+import net.pl3x.bukkit.worldloader.command.CmdRTP;
 import net.pl3x.bukkit.worldloader.command.CmdSetSpawn;
 import net.pl3x.bukkit.worldloader.command.CmdSpawn;
 import net.pl3x.bukkit.worldloader.command.CmdWorld;
@@ -16,9 +17,10 @@ public class WorldLoader extends JavaPlugin {
     }
 
     public void onEnable() {
-        Config.reload();
-        Lang.reload();
+        Config.reload(this);
+        Lang.reload(this);
 
+        getCommand("rtp").setExecutor(new CmdRTP());
         getCommand("setspawn").setExecutor(new CmdSetSpawn());
         getCommand("spawn").setExecutor(new CmdSpawn());
         getCommand("world").setExecutor(new CmdWorld());

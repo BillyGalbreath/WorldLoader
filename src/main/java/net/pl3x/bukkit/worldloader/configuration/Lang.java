@@ -1,12 +1,12 @@
 package net.pl3x.bukkit.worldloader.configuration;
 
 import com.google.common.base.Throwables;
-import net.pl3x.bukkit.worldloader.WorldLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,11 @@ public class Lang {
     public static String WORLD_NO_PERMISSION = "&4You do not have permission to warp to {world}!";
 
     public static String TELEPORTING = "&dTeleporting...";
+
+    public static String RTP_ALREADY_IN_PROGRESS = "&cRTP already in progress, please wait...";
+    public static String RTP_SEARCHING = "&dSearching for random location...";
+    public static String RTP_SUCCESS = "&dTeleported to random location";
+    public static String RTP_ERROR = "&cThere was a problem trying to find a safe location";
 
     public static String SET_SPAWN_SUCCESS = "&dSpawn has been set for &7{world}";
     public static String SET_SPAWN_ERROR = "&cThere was a problem trying to set spawn";
@@ -38,6 +43,11 @@ public class Lang {
 
         TELEPORTING = getString("teleporting", TELEPORTING);
 
+        RTP_ALREADY_IN_PROGRESS = getString("rpt-already-in-progress", RTP_ALREADY_IN_PROGRESS);
+        RTP_SEARCHING = getString("rtp-searching", RTP_SEARCHING);
+        RTP_SUCCESS = getString("rtp-success", RTP_SUCCESS);
+        RTP_ERROR = getString("rtp-error", RTP_ERROR);
+
         SET_SPAWN_SUCCESS = getString("set-spawn-success", SET_SPAWN_SUCCESS);
         SET_SPAWN_ERROR = getString("set-spawn-error", SET_SPAWN_ERROR);
 
@@ -54,8 +64,7 @@ public class Lang {
     /**
      * Reload the language file
      */
-    public static void reload() {
-        WorldLoader plugin = WorldLoader.getInstance();
+    public static void reload(Plugin plugin) {
         File configFile = new File(plugin.getDataFolder(), Config.LANGUAGE_FILE);
         config = new YamlConfiguration();
         try {
@@ -65,7 +74,7 @@ public class Lang {
             Bukkit.getLogger().log(Level.SEVERE, "Could not load " + Config.LANGUAGE_FILE + ", please correct your syntax errors", ex);
             throw Throwables.propagate(ex);
         }
-        config.options().header("This is the main language file for WorldLoader.");
+        config.options().header("This is the main language file for " + plugin);
         config.options().copyDefaults(true);
 
         Lang.init();

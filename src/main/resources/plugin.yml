@@ -4,8 +4,13 @@ version: "${project.version}"
 description: "${project.artifactId} Plugin"
 author: "BillyGalbreath"
 api-version: "1.13"
+softdepend:
+  - CmdCD
 
 commands:
+  rtp:
+    description: Teleport to a random location
+    usage: /<command>
   setspawn:
     description: Set the servers main spawn
     usage: /<command>
@@ -20,6 +25,9 @@ commands:
     usage: /<command> (reload)
 
 permissions:
+  command.rtp:
+    description: Teleport to a random location
+    default: op
   command.setspawn:
     description: Set the servers main spawn
     default: op
