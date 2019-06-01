@@ -55,11 +55,12 @@ public class CmdRTP implements TabExecutor {
 
         searching.add(player.getUniqueId());
         World world = player.getWorld();
-        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
         Lang.send(sender, Lang.RTP_SEARCHING);
 
         CompletableFuture.supplyAsync(() -> {
+            ThreadLocalRandom rand = ThreadLocalRandom.current();
+
             Location center = world.getWorldBorder().getCenter();
             int maxRadius = (int) world.getWorldBorder().getSize() / 2;
 
