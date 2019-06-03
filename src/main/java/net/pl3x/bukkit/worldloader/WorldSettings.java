@@ -21,19 +21,21 @@ public class WorldSettings {
     private final boolean spawnAnimals;
     private final String onJoinTitle;
     private final String onJoinSubtitle;
+    private final String generator;
 
     public WorldSettings(String name, ConfigurationSection config) {
         this.name = name;
         this.type = WorldType.valueOf(config.getString("type"));
-        this.environment = World.Environment.valueOf(config.getString("environment"));
+        this.environment = World.Environment.valueOf(config.getString("environment", "NORMAL"));
         this.seed = config.getLong("seed", ThreadLocalRandom.current().nextLong());
-        this.generateStructures = config.getBoolean("generate-structures");
-        this.pvp = config.getBoolean("pvp");
-        this.difficulty = Difficulty.valueOf(config.getString("difficulty"));
-        this.spawnMonsters = config.getBoolean("spawn-monsters");
-        this.spawnAnimals = config.getBoolean("spawn-animals");
+        this.generateStructures = config.getBoolean("generate-structures", true);
+        this.pvp = config.getBoolean("pvp", true);
+        this.difficulty = Difficulty.valueOf(config.getString("difficulty", "NORMAL"));
+        this.spawnMonsters = config.getBoolean("spawn-monsters", true);
+        this.spawnAnimals = config.getBoolean("spawn-animals", true);
         this.onJoinTitle = config.getString("on-join.title", null);
         this.onJoinSubtitle = config.getString("on-join.subtitle", null);
+        this.generator = config.getString("generator", null);
 
         WorldLoader plugin = WorldLoader.getInstance();
 
@@ -42,7 +44,13 @@ public class WorldSettings {
         if (world == null) {
             plugin.getLogger().info("Preparing level \"" + name + "\"");
 
-            world = new WorldCreator(name).type(type).environment(environment).seed(seed).generateStructures(generateStructures).createWorld();
+            WorldCreator builder = new WorldCreator(name).type(type).environment(environment).seed(seed).generateStructures(generateStructures);
+
+            if (generator != null && !generator.isEmpty()) {
+                builder.generator(generator);
+            }
+
+            world = builder.createWorld();
 
             if (world == null) {
                 throw new RuntimeException();

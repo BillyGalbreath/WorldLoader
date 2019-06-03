@@ -74,6 +74,7 @@ public class Config {
                         WORLD_SETTINGS.put(name, new WorldSettings(name, section));
                     } catch (Exception e) {
                         plugin.getLogger().warning("Could not load level \"" + name + "\"");
+                        e.printStackTrace();
                     }
                 }
             }

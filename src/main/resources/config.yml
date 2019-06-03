@@ -13,3 +13,4 @@ worlds:
     on-join:
       title: ""
       subtitle: ""
+    generator: ""
