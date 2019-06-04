@@ -56,14 +56,8 @@ public class Config {
 
         Config.init();
 
-        try {
-            config.save(configFile);
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
-        }
-
         WORLD_SETTINGS.clear();
-        ConfigurationSection worlds = plugin.getConfig().getConfigurationSection("worlds");
+        ConfigurationSection worlds = config.getConfigurationSection("worlds");
         if (worlds != null) {
             for (String name : worlds.getKeys(false)) {
                 ConfigurationSection section = worlds.getConfigurationSection(name);
@@ -78,6 +72,12 @@ public class Config {
                     }
                 }
             }
+        }
+
+        try {
+            config.save(configFile);
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
         }
     }
 
