@@ -1,13 +1,10 @@
 package net.pl3x.bukkit.worldloader.command;
 
-import com.destroystokyo.paper.MaterialSetTag;
-import net.pl3x.bukkit.worldloader.WorldLoader;
 import net.pl3x.bukkit.worldloader.configuration.Config;
 import net.pl3x.bukkit.worldloader.configuration.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,9 +22,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CmdRTP implements TabExecutor {
-    private static final MaterialSetTag SAFE_BLOCKS = new MaterialSetTag(new NamespacedKey(WorldLoader.getInstance(), "safe_blocks"))
-            .add(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR);
-
     private static final Set<UUID> searching = new HashSet<>();
 
     @Override
@@ -79,9 +73,9 @@ public class CmdRTP implements TabExecutor {
                 Location location = new Location(world, x, y, z);
 
                 Block feet = location.getBlock();
-                if (SAFE_BLOCKS.isTagged(feet)) {
+                if (feet.getType() == Material.AIR) {
                     Block head = feet.getRelative(BlockFace.UP);
-                    if (SAFE_BLOCKS.isTagged(head)) {
+                    if (head.getType() == Material.AIR) {
                         Block ground = feet.getRelative(BlockFace.DOWN);
                         if (ground.getType().isOccluding()) {
                             return location;
