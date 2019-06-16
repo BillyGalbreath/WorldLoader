@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -22,8 +23,11 @@ public class Lang {
 
     public static String RTP_ALREADY_IN_PROGRESS = "&cRTP already in progress, please wait...";
     public static String RTP_SEARCHING = "&dSearching for random location...";
+    public static String RTP_SEARCHING_ACTION = "&dSearching For Safe Location... &7{current}&e/&7{max}";
     public static String RTP_SUCCESS = "&dTeleported to random location";
+    public static String RTP_SUCCESS_ACTION = "&aFound A Safe Location. Teleporting in {seconds}s...";
     public static String RTP_ERROR = "&cThere was a problem trying to find a safe location";
+    public static String RTP_ERROR_ACTION = "&cCould Not Find A Safe Location";
 
     public static String SET_SPAWN_SUCCESS = "&dSpawn has been set for &7{world}";
     public static String SET_SPAWN_ERROR = "&cThere was a problem trying to set spawn";
@@ -116,6 +120,18 @@ public class Lang {
         for (String part : colorize(message).split("\n")) {
             Bukkit.getOnlinePlayers().forEach(recipient -> recipient.sendMessage(part));
             Bukkit.getConsoleSender().sendMessage(part);
+        }
+    }
+
+    /**
+     * Sends a message to a recipient's actionbar
+     *
+     * @param recipient Recipient of message
+     * @param message   Message to send
+     */
+    public static void sendActionBar(Player recipient, String message) {
+        if (recipient != null) {
+            recipient.sendActionBar(colorize(message));
         }
     }
 

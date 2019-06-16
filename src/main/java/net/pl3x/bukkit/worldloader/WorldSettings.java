@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,7 +24,7 @@ public class WorldSettings {
     private final String onJoinSubtitle;
     private final String generator;
 
-    public WorldSettings(String name, ConfigurationSection config) {
+    public WorldSettings(Plugin plugin, String name, ConfigurationSection config) {
         this.name = name;
         this.type = WorldType.valueOf(config.getString("type"));
         this.environment = World.Environment.valueOf(config.getString("environment", "NORMAL"));
@@ -36,8 +37,6 @@ public class WorldSettings {
         this.onJoinTitle = config.getString("on-join.title", null);
         this.onJoinSubtitle = config.getString("on-join.subtitle", null);
         this.generator = config.getString("generator", null);
-
-        WorldLoader plugin = WorldLoader.getInstance();
 
         World world = Bukkit.getWorld(name);
 
