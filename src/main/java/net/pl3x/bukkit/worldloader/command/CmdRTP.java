@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CmdRTP implements TabExecutor {
-    private static final Set<UUID> searching = new HashSet<>();
+    private static final Set<UUID> SEARCHING = new HashSet<>();
 
     private final WorldLoader plugin;
 
@@ -50,105 +50,149 @@ public class CmdRTP implements TabExecutor {
             return true;
         }
 
-        if (searching.contains(player.getUniqueId())) {
+        if (SEARCHING.contains(player.getUniqueId())) {
             Lang.send(sender, Lang.RTP_ALREADY_IN_PROGRESS);
             return true;
         }
 
-        searching.add(player.getUniqueId());
-        World world = player.getWorld();
+        FindLocation task = new FindLocation(player, command);
+        task.runTaskAsynchronously(plugin);
 
-        Lang.send(sender, Lang.RTP_SEARCHING);
+        return true;
+    }
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Location center = world.getWorldBorder().getCenter();
-                int maxRadius = (int) world.getWorldBorder().getSize() / 2;
+    class FindLocation extends BukkitRunnable {
+        private final Player player;
+        private final Command command;
 
-                int minX = (int) center.getX() - maxRadius + 1;
-                int maxX = (int) center.getX() + maxRadius;
-                int minZ = (int) center.getZ() - maxRadius + 1;
-                int maxZ = (int) center.getZ() + maxRadius;
+        FindLocation(Player player, Command command) {
+            this.player = player;
+            this.command = command;
+        }
 
-                int maxTries = 10;
-                for (int currentTry = 1; currentTry <= maxTries; currentTry++) {
-                    if (!player.isOnline()) {
-                        return; // cancel
-                    }
+        @Override
+        public void run() {
+            SEARCHING.add(player.getUniqueId());
+            Lang.send(player, Lang.RTP_SEARCHING);
 
-                    Lang.sendActionBar(player, Lang.RTP_SEARCHING_ACTION
-                            .replace("{current}", String.valueOf(currentTry))
-                            .replace("{max}", String.valueOf(maxTries)));
+            World world = player.getWorld();
+            Location center = world.getWorldBorder().getCenter();
+            int maxRadius = (int) world.getWorldBorder().getSize() / 2;
 
-                    try {
-                        Location location = plugin.getServer().getScheduler().callSyncMethod(plugin, () -> {
-                            ThreadLocalRandom rand = ThreadLocalRandom.current();
+            int minX = (int) center.getX() - maxRadius + 1;
+            int maxX = (int) center.getX() + maxRadius;
+            int minZ = (int) center.getZ() - maxRadius + 1;
+            int maxZ = (int) center.getZ() + maxRadius;
 
-                            int x = rand.nextInt(maxX - minX) + minX;
-                            int z = rand.nextInt(maxZ - minZ) + minZ;
+            int maxTries = 10;
+            for (int currentTry = 1; currentTry <= maxTries; currentTry++) {
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
 
-                            int y = world.getEnvironment() == World.Environment.NETHER ? rand.nextInt(75) + 25 : world.getHighestBlockYAt(x, z);
+                Lang.sendActionBar(player, Lang.RTP_SEARCHING_ACTION
+                        .replace("{current}", String.valueOf(currentTry))
+                        .replace("{max}", String.valueOf(maxTries)));
 
-                            Location loc = new Location(world, x, y - 1, z);
+                try {
+                    Location location = plugin.getServer().getScheduler().callSyncMethod(plugin, () -> {
+                        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
-                            Block ground = loc.getBlock();
-                            if (ground.getType().isOccluding()) {
-                                Block feet = ground.getRelative(BlockFace.UP);
-                                if (feet.getType() == Material.AIR) {
-                                    Block head = feet.getRelative(BlockFace.UP);
-                                    if (head.getType() == Material.AIR) {
-                                        Block above = head.getRelative(BlockFace.UP);
-                                        if (above.getType() == Material.AIR) {
-                                            return loc;
-                                        }
+                        int x = rand.nextInt(maxX - minX) + minX;
+                        int z = rand.nextInt(maxZ - minZ) + minZ;
+
+                        int y = world.getEnvironment() == World.Environment.NETHER ? rand.nextInt(75) + 25 : world.getHighestBlockYAt(x, z);
+
+                        Location loc = new Location(world, x, y - 1, z);
+
+                        Block ground = loc.getBlock();
+                        if (ground.getType().isOccluding()) {
+                            Block feet = ground.getRelative(BlockFace.UP);
+                            if (feet.getType() == Material.AIR) {
+                                Block head = feet.getRelative(BlockFace.UP);
+                                if (head.getType() == Material.AIR) {
+                                    Block above = head.getRelative(BlockFace.UP);
+                                    if (above.getType() == Material.AIR) {
+                                        return loc;
                                     }
                                 }
                             }
-                            return null;
-                        }).get();
-                        if (location != null) {
-                            searching.remove(player.getUniqueId());
-                            if (player.isOnline()) {
-                                Location finalLoc = location.add(0, 1, 0);
-                                plugin.getServer().getScheduler().callSyncMethod(plugin, () ->
-                                        new BukkitRunnable() {
-                                            private int timer = 101;
-
-                                            public void run() {
-                                                if (timer < 0) {
-                                                    if (player.teleport(finalLoc)) {
-                                                        if (Bukkit.getPluginManager().isPluginEnabled("CmdCD")) {
-                                                            net.pl3x.bukkit.cmdcd.CmdCD.addCooldown(command, player.getUniqueId(), Config.RTP_COOLDOWN);
-                                                        }
-                                                        Lang.send(player, Lang.RTP_SUCCESS);
-                                                        new BukkitRunnable() {
-                                                            public void run() {
-                                                                player.teleport(finalLoc); // one more time for good measure
-                                                            }
-                                                        }.runTaskLater(plugin, 20L);
-                                                    } else {
-                                                        Lang.send(player, Lang.RTP_ERROR);
-                                                    }
-                                                    cancel();
-                                                    return;
-                                                } else if (timer % 20 == 0) {
-                                                    Lang.sendActionBar(player, Lang.RTP_SUCCESS_ACTION
-                                                            .replace("{seconds}", String.valueOf(timer / 20)));
-                                                }
-                                                finalLoc.getChunk().load(true);
-                                                timer--;
-                                            }
-                                        }.runTaskTimer(plugin, 0L, 1L)).get();
-                            }
-                            return; // done
                         }
-                    } catch (InterruptedException | ExecutionException ignore) {
+                        return null;
+                    }).get();
+
+                    if (location != null) {
+                        new Countdown(player, location.add(0.5, 1, 0.5), command)
+                                .runTaskTimer(plugin, 0L, 1L);
+                        return;
                     }
+                } catch (InterruptedException | ExecutionException ignore) {
                 }
-                Lang.sendActionBar(player, Lang.RTP_ERROR_ACTION);
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignore) {
+                }
             }
-        }.runTaskAsynchronously(plugin);
-        return true;
+
+            SEARCHING.remove(player.getUniqueId());
+            Lang.sendActionBar(player, Lang.RTP_ERROR_ACTION);
+        }
+    }
+
+    class Countdown extends BukkitRunnable {
+        private final Player player;
+        private final Location location;
+        private final Command command;
+
+        private int timer = 101;
+
+        Countdown(Player player, Location location, Command command) {
+            this.player = player;
+            this.location = location;
+            this.command = command;
+        }
+
+        public void run() {
+            if (!player.isOnline()) {
+                cancel();
+                return;
+            }
+
+            location.getChunk().load(true);
+
+            if (timer < 0) {
+                if (player.teleport(location)) {
+                    if (Bukkit.getPluginManager().isPluginEnabled("CmdCD")) {
+                        net.pl3x.bukkit.cmdcd.CmdCD.addCooldown(command, player.getUniqueId(), Config.RTP_COOLDOWN);
+                    }
+                    Lang.send(player, Lang.RTP_SUCCESS);
+                    new BukkitRunnable() {
+                        public void run() {
+                            player.teleport(location); // one more time for good measure
+                        }
+                    }.runTaskLater(plugin, 20L);
+                } else {
+                    Lang.send(player, Lang.RTP_ERROR);
+                }
+
+                cancel();
+                return;
+            }
+
+            if (timer % 20 == 0) {
+                Lang.sendActionBar(player, Lang.RTP_SUCCESS_ACTION
+                        .replace("{seconds}", String.valueOf(timer / 20)));
+            }
+
+            timer--;
+        }
+
+        @Override
+        public void cancel() {
+            super.cancel();
+            SEARCHING.remove(player.getUniqueId());
+        }
     }
 }
