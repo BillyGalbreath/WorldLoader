@@ -41,8 +41,8 @@ public class CmdSpawn implements TabExecutor {
 
         Lang.send(sender, Lang.TELEPORTING);
 
-        player.teleportAsync(spawn).thenAccept(success ->
-                Lang.send(sender, success ? Lang.SPAWN_SUCCESS : Lang.SPAWN_ERROR));
+        boolean success = player.teleport(spawn);
+        Lang.send(sender, success ? Lang.SPAWN_SUCCESS : Lang.SPAWN_ERROR);
         return true;
     }
 }
