@@ -10,18 +10,23 @@ softdepend:
 commands:
   rtp:
     description: Teleport to a random location
+    permission: command.rtp
     usage: /<command>
   setspawn:
     description: Set the servers main spawn
+    permission: command.setspawn
     usage: /<command>
   spawn:
     description: Teleport to the servers main spawn
+    permission: command.spawn
     usage: /<command>
   world:
     description: Teleport between worlds
+    permission: command.world
     usage: /<command> [world]
   worldloader:
     description: Reload configs
+    permission: command.worldloader
     usage: /<command> (reload)
 
 permissions:
