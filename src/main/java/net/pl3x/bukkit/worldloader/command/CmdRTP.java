@@ -123,6 +123,9 @@ public class CmdRTP implements TabExecutor {
                     }).get();
 
                     if (location != null) {
+                        if (location.getWorld().getEnvironment() == World.Environment.NORMAL) {
+                            location.setY(300);
+                        }
                         new Countdown(player, location.add(0.5, 1, 0.5), command)
                                 .runTaskTimer(plugin, 0L, 1L);
                         return;
@@ -164,6 +167,7 @@ public class CmdRTP implements TabExecutor {
 
             if (timer < 0) {
                 if (player.teleport(location)) {
+                    player.setFallDistance(-1024F); // do not take fall damage
                     if (Bukkit.getPluginManager().isPluginEnabled("CmdCD")) {
                         net.pl3x.bukkit.cmdcd.CmdCD.addCooldown(command, player.getUniqueId(), Config.RTP_COOLDOWN);
                     }
@@ -171,6 +175,7 @@ public class CmdRTP implements TabExecutor {
                     new BukkitRunnable() {
                         public void run() {
                             player.teleport(location); // one more time for good measure
+                            player.setFallDistance(-1024F); // do not take fall damage
                         }
                     }.runTaskLater(plugin, 20L);
                 } else {
