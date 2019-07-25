@@ -1,9 +1,10 @@
 package net.pl3x.bukkit.worldloader.command;
 
 import net.pl3x.bukkit.worldloader.configuration.Config;
+import net.pl3x.bukkit.worldloader.configuration.Data;
 import net.pl3x.bukkit.worldloader.configuration.Lang;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -31,17 +32,17 @@ public class CmdSpawn implements TabExecutor {
             return true;
         }
 
-        Location spawn;
-
+        World world;
         if (Config.SPAWN_USES_CURRENT_WORLD) {
-            spawn = player.getWorld().getSpawnLocation();
+            world = player.getWorld();
         } else {
-            spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+            world = Bukkit.getWorlds().get(0);
         }
 
         Lang.send(sender, Lang.TELEPORTING);
 
-        boolean success = player.teleport(spawn);
+        boolean success = player.teleport(Data.getSpawn(world));
+
         Lang.send(sender, success ? Lang.SPAWN_SUCCESS : Lang.SPAWN_ERROR);
         return true;
     }

@@ -1,6 +1,10 @@
 package net.pl3x.bukkit.worldloader.command;
 
+import net.pl3x.bukkit.worldloader.WorldLoader;
+import net.pl3x.bukkit.worldloader.configuration.Data;
 import net.pl3x.bukkit.worldloader.configuration.Lang;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -10,6 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class CmdSetSpawn implements TabExecutor {
+    private final WorldLoader plugin;
+
+    public CmdSetSpawn(WorldLoader plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return Collections.emptyList();
@@ -28,10 +38,20 @@ public class CmdSetSpawn implements TabExecutor {
             return true;
         }
 
-        boolean success = player.getWorld().setSpawnLocation(player.getLocation());
+        World world = player.getWorld();
+        Location spawn = player.getLocation();
 
-        Lang.send(sender, (success ? Lang.SET_SPAWN_SUCCESS : Lang.SET_SPAWN_ERROR)
-                .replace("{world}", player.getWorld().getName()));
+        boolean success = world.setSpawnLocation(spawn);
+
+        if (success) {
+            Data.setSpawn(plugin, world, spawn);
+
+            Lang.send(sender, Lang.SET_SPAWN_SUCCESS
+                    .replace("{world}", world.getName()));
+        } else {
+            Lang.send(sender, Lang.SET_SPAWN_ERROR
+                    .replace("{world}", world.getName()));
+        }
         return true;
     }
 }
