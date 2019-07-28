@@ -16,7 +16,7 @@ public class JoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPlayedBefore()) {
-            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+            player.teleportAsync(Bukkit.getWorlds().get(0).getSpawnLocation());
         }
     }
 

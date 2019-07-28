@@ -57,10 +57,9 @@ public class CmdWorld implements TabExecutor {
         }
 
         Lang.send(sender, Lang.TELEPORTING);
-
-        boolean success = player.teleport(world.getSpawnLocation());
-        Lang.send(sender, (success ? Lang.WORLD_SUCCESS : Lang.WORLD_ERROR)
-                .replace("{world}", world.getName()));
+        player.teleportAsync(world.getSpawnLocation()).thenAccept(success ->
+                Lang.send(sender, (success ? Lang.WORLD_SUCCESS : Lang.WORLD_ERROR)
+                        .replace("{world}", world.getName())));
         return true;
     }
 }

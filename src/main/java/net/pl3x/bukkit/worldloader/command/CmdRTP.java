@@ -166,22 +166,17 @@ public class CmdRTP implements TabExecutor {
             location.getChunk().load(true);
 
             if (timer < 0) {
-                if (player.teleport(location)) {
-                    player.setFallDistance(-1024F); // do not take fall damage
-                    if (Bukkit.getPluginManager().isPluginEnabled("CmdCD")) {
-                        net.pl3x.bukkit.cmdcd.CmdCD.addCooldown(command, player.getUniqueId(), Config.RTP_COOLDOWN);
-                    }
-                    Lang.send(player, Lang.RTP_SUCCESS);
-                    new BukkitRunnable() {
-                        public void run() {
-                            player.teleport(location); // one more time for good measure
-                            player.setFallDistance(-1024F); // do not take fall damage
+                player.teleportAsync(location).thenAccept(success -> {
+                    if (success) {
+                        player.setFallDistance(-1024F); // do not take fall damage
+                        if (Bukkit.getPluginManager().isPluginEnabled("CmdCD")) {
+                            net.pl3x.bukkit.cmdcd.CmdCD.addCooldown(command, player.getUniqueId(), Config.RTP_COOLDOWN);
                         }
-                    }.runTaskLater(plugin, 20L);
-                } else {
-                    Lang.send(player, Lang.RTP_ERROR);
-                }
-
+                        Lang.send(player, Lang.RTP_SUCCESS);
+                    } else {
+                        Lang.send(player, Lang.RTP_ERROR);
+                    }
+                });
                 cancel();
                 return;
             }
