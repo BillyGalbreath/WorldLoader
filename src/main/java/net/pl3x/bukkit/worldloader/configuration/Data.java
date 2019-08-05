@@ -92,7 +92,13 @@ public class Data {
     }
 
     public static void setSpawn(Plugin plugin, World world, Location spawn) {
+        spawn = spawn.toCenterLocation();
         SPAWN.put(world.getUID(), spawn);
+        config.set("spawn." + world.getName() + ".x", spawn.getX());
+        config.set("spawn." + world.getName() + ".y", spawn.getY());
+        config.set("spawn." + world.getName() + ".z", spawn.getZ());
+        config.set("spawn." + world.getName() + ".yaw", spawn.getYaw());
+        config.set("spawn." + world.getName() + ".pitch", spawn.getPitch());
         save(plugin);
     }
 }
