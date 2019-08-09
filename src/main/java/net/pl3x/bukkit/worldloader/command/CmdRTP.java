@@ -5,10 +5,7 @@ import net.pl3x.bukkit.worldloader.configuration.Config;
 import net.pl3x.bukkit.worldloader.configuration.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -95,42 +92,28 @@ public class CmdRTP implements TabExecutor {
                         .replace("{current}", String.valueOf(currentTry))
                         .replace("{max}", String.valueOf(maxTries)));
 
+                Location location = null;
+
                 try {
-                    Location location = plugin.getServer().getScheduler().callSyncMethod(plugin, () -> {
+                    location = plugin.getServer().getScheduler().callSyncMethod(plugin, () -> {
                         ThreadLocalRandom rand = ThreadLocalRandom.current();
 
                         int x = rand.nextInt(maxX - minX) + minX;
                         int z = rand.nextInt(maxZ - minZ) + minZ;
-
                         int y = world.getEnvironment() == World.Environment.NETHER ? rand.nextInt(75) + 25 : world.getHighestBlockYAt(x, z);
 
-                        Location loc = new Location(world, x, y - 1, z);
-
-                        Block ground = loc.getBlock();
-                        if (ground.getType().isOccluding()) {
-                            Block feet = ground.getRelative(BlockFace.UP);
-                            if (feet.getType() == Material.AIR) {
-                                Block head = feet.getRelative(BlockFace.UP);
-                                if (head.getType() == Material.AIR) {
-                                    Block above = head.getRelative(BlockFace.UP);
-                                    if (above.getType() == Material.AIR) {
-                                        return loc;
-                                    }
-                                }
-                            }
-                        }
-                        return null;
+                        return new Location(world, x, y - 1, z);
                     }).get();
-
-                    if (location != null) {
-                        if (location.getWorld().getEnvironment() == World.Environment.NORMAL) {
-                            location.setY(300);
-                        }
-                        new Countdown(player, location.add(0.5, 1, 0.5), command)
-                                .runTaskTimer(plugin, 0L, 1L);
-                        return;
-                    }
                 } catch (InterruptedException | ExecutionException ignore) {
+                }
+
+                if (location != null) {
+                    if (location.getWorld().getEnvironment() == World.Environment.NORMAL) {
+                        location.setY(300);
+                    }
+                    new Countdown(player, location.add(0.5, 1, 0.5), command)
+                            .runTaskTimer(plugin, 0L, 1L);
+                    return;
                 }
 
                 try {
@@ -149,7 +132,7 @@ public class CmdRTP implements TabExecutor {
         private final Location location;
         private final Command command;
 
-        private int timer = 101;
+        private int timer = -1;
 
         Countdown(Player player, Location location, Command command) {
             this.player = player;
