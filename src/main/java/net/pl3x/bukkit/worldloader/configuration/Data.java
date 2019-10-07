@@ -84,6 +84,7 @@ public class Data {
     public static void setSpawn(Plugin plugin, World world, Location spawn) {
         SPAWN.put(world.getUID(), spawn);
         config.set("spawn." + world.getName(), spawn);
+        world.setSpawnLocation(spawn);
         save(plugin);
     }
 }
