@@ -22,7 +22,7 @@ public class CmdWorldLoader implements TabExecutor {
         if (args.length == 1 && "reload".startsWith(args[0].toLowerCase()) && sender.hasPermission("command.worldloader")) {
             return Collections.singletonList("reload");
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
