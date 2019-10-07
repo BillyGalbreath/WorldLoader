@@ -106,4 +106,8 @@ public class WorldSettings {
     public String getOnJoinSubtitle() {
         return onJoinSubtitle;
     }
+
+    public String getGenerator() {
+        return generator;
+    }
 }
