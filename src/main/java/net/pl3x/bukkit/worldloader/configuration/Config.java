@@ -21,7 +21,7 @@ public class Config {
 
     public static boolean PER_WORLD_PERMISSIONS = false;
 
-    public static int RTP_COOLDOWN = 300; // 5 minutes
+    public static int RTP_COOLDOWN = 60; // 1 minute
 
     public static final Map<String, WorldSettings> WORLD_SETTINGS = new HashMap<>();
 

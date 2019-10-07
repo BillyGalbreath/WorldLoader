@@ -12,6 +12,9 @@ commands:
     description: Teleport to a random location
     permission: command.rtp
     usage: /<command>
+    aliases:
+      - wild
+      - wilderness
   setspawn:
     description: Set the servers main spawn
     permission: command.setspawn

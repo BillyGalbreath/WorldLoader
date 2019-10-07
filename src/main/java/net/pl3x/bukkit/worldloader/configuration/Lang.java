@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -21,13 +20,9 @@ public class Lang {
 
     public static String TELEPORTING = "&dTeleporting...";
 
-    public static String RTP_ALREADY_IN_PROGRESS = "&cRTP already in progress, please wait...";
-    public static String RTP_SEARCHING = "&dSearching for random location...";
-    public static String RTP_SEARCHING_ACTION = "&dSearching For Safe Location... &7{current}&e/&7{max}";
     public static String RTP_SUCCESS = "&dTeleported to random location";
-    public static String RTP_SUCCESS_ACTION = "&aFound A Safe Location. Teleporting in {seconds}s...";
+    public static String RTP_WORLD_DISABLED = "&4You cannot /rtp in this world";
     public static String RTP_ERROR = "&cThere was a problem trying to find a safe location";
-    public static String RTP_ERROR_ACTION = "&cCould Not Find A Safe Location";
 
     public static String SET_SPAWN_SUCCESS = "&dSpawn has been set for &7{world}";
     public static String SET_SPAWN_ERROR = "&cThere was a problem trying to set spawn";
@@ -47,9 +42,8 @@ public class Lang {
 
         TELEPORTING = getString("teleporting", TELEPORTING);
 
-        RTP_ALREADY_IN_PROGRESS = getString("rpt-already-in-progress", RTP_ALREADY_IN_PROGRESS);
-        RTP_SEARCHING = getString("rtp-searching", RTP_SEARCHING);
         RTP_SUCCESS = getString("rtp-success", RTP_SUCCESS);
+        RTP_WORLD_DISABLED = getString("rtp-world-disabled", RTP_WORLD_DISABLED);
         RTP_ERROR = getString("rtp-error", RTP_ERROR);
 
         SET_SPAWN_SUCCESS = getString("set-spawn-success", SET_SPAWN_SUCCESS);
@@ -108,30 +102,6 @@ public class Lang {
             for (String part : colorize(message).split("\n")) {
                 recipient.sendMessage(part);
             }
-        }
-    }
-
-    /**
-     * Broadcast a message to server
-     *
-     * @param message Message to broadcast
-     */
-    public static void broadcast(String message) {
-        for (String part : colorize(message).split("\n")) {
-            Bukkit.getOnlinePlayers().forEach(recipient -> recipient.sendMessage(part));
-            Bukkit.getConsoleSender().sendMessage(part);
-        }
-    }
-
-    /**
-     * Sends a message to a recipient's actionbar
-     *
-     * @param recipient Recipient of message
-     * @param message   Message to send
-     */
-    public static void sendActionBar(Player recipient, String message) {
-        if (recipient != null) {
-            recipient.sendActionBar(colorize(message));
         }
     }
 

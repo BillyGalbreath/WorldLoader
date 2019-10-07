@@ -1,5 +1,11 @@
 language-file: "lang-en.yml"
 
+spawn-uses-current-world: false
+
+per-world-permissions: false
+
+rtp-cooldown: 60
+
 worlds:
   wilderness:
     type: "NORMAL"
