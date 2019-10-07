@@ -2,6 +2,7 @@ package net.pl3x.bukkit.worldloader.listener;
 
 import net.pl3x.bukkit.worldloader.WorldSettings;
 import net.pl3x.bukkit.worldloader.configuration.Config;
+import net.pl3x.bukkit.worldloader.configuration.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ public class JoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPlayedBefore()) {
-            player.teleportAsync(Bukkit.getWorlds().get(0).getSpawnLocation());
+            player.teleportAsync(Data.getSpawn(Bukkit.getWorlds().get(0)));
         }
     }
 
