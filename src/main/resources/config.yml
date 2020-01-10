@@ -6,6 +6,8 @@ per-world-permissions: false
 
 rtp-cooldown: 60
 
+spawn-teleport-delay: 3
+
 worlds:
   wilderness:
     type: "NORMAL"

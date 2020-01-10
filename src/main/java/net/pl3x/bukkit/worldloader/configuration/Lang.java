@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -18,6 +19,8 @@ public class Lang {
 
     public static String WORLD_NO_PERMISSION = "&4You do not have permission to warp to {world}!";
 
+    public static String DELAYED_COUNTDOWN = "&aPlease wait... &e{seconds} &aremaining...";
+
     public static String TELEPORTING = "&dTeleporting...";
 
     public static String RTP_SUCCESS = "&dTeleported to random location";
@@ -27,6 +30,7 @@ public class Lang {
     public static String SET_SPAWN_SUCCESS = "&dSpawn has been set for &7{world}";
     public static String SET_SPAWN_ERROR = "&cThere was a problem trying to set spawn";
 
+    public static String SPAWN_DELAYED_PLEASE_WAIT = "&dYou will be teleported momentarily...";
     public static String SPAWN_SUCCESS = "&dTeleported to spawn";
     public static String SPAWN_ERROR = "&cThere was a problem trying to teleport to spawn";
 
@@ -40,6 +44,8 @@ public class Lang {
 
         WORLD_NO_PERMISSION = getString("world-no-permission", WORLD_NO_PERMISSION);
 
+        DELAYED_COUNTDOWN = getString("delayed-countdown", DELAYED_COUNTDOWN);
+
         TELEPORTING = getString("teleporting", TELEPORTING);
 
         RTP_SUCCESS = getString("rtp-success", RTP_SUCCESS);
@@ -49,6 +55,7 @@ public class Lang {
         SET_SPAWN_SUCCESS = getString("set-spawn-success", SET_SPAWN_SUCCESS);
         SET_SPAWN_ERROR = getString("set-spawn-error", SET_SPAWN_ERROR);
 
+        SPAWN_DELAYED_PLEASE_WAIT = getString("spawn-delayed-please-wait", SPAWN_DELAYED_PLEASE_WAIT);
         SPAWN_SUCCESS = getString("spawn-success", SPAWN_SUCCESS);
         SPAWN_ERROR = getString("spawn-error", SPAWN_ERROR);
 
@@ -103,6 +110,10 @@ public class Lang {
                 recipient.sendMessage(part);
             }
         }
+    }
+
+    public static void sendActionBar(Player player, String message) {
+        player.sendActionBar(ChatColor.translateAlternateColorCodes('&', message));
     }
 
     /**

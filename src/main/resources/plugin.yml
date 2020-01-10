@@ -42,6 +42,9 @@ permissions:
   command.spawn:
     description: Teleport to the servers main spawn
     default: true
+  command.spawn.bypass.delay:
+    description: Bypass the configured teleport delay for the /spawn command
+    default: false
   command.world:
     description: Teleport between worlds
     default: op

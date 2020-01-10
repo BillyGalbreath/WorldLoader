@@ -23,6 +23,8 @@ public class Config {
 
     public static int RTP_COOLDOWN = 60; // 1 minute
 
+    public static int SPAWN_TELEPORT_DELAY = 3; // 3 seconds
+
     public static final Map<String, WorldSettings> WORLD_SETTINGS = new HashMap<>();
 
     private static void init() {
@@ -33,6 +35,8 @@ public class Config {
         PER_WORLD_PERMISSIONS = getBoolean("per-world-permissions", PER_WORLD_PERMISSIONS);
 
         RTP_COOLDOWN = getInt("rtp-cooldown", RTP_COOLDOWN);
+
+        SPAWN_TELEPORT_DELAY = getInt("spawn-teleport-delay", SPAWN_TELEPORT_DELAY);
     }
 
     // ############################  DO NOT EDIT BELOW THIS LINE  ############################

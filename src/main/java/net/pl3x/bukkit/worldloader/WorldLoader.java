@@ -18,7 +18,7 @@ public class WorldLoader extends JavaPlugin {
 
         getCommand("rtp").setExecutor(new CmdRTP());
         getCommand("setspawn").setExecutor(new CmdSetSpawn(this));
-        getCommand("spawn").setExecutor(new CmdSpawn());
+        getCommand("spawn").setExecutor(new CmdSpawn(this));
         getCommand("world").setExecutor(new CmdWorld());
         getCommand("worldloader").setExecutor(new CmdWorldLoader(this));
     }
